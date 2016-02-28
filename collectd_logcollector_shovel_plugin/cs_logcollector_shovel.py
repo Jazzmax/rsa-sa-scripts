@@ -4,22 +4,21 @@
 # Purpose:     Collectd module for SA to generate LC Shovel Status stats out of a rabbimq rest api
 #
 # Author:      Maxim Siyazov
-# Version:     0.3
+# Version:     0.4
 # Created:     22/02/2016
 # Copyright:   (c) msiyazov 2016
-# Licence:     <your licence>
+# Licence:     GNU General Public License v3 (http://www.gnu.org/licenses/)
 #-------------------------------------------------------------------------------
 
 import re
 import nwutils
-#import cs_common
 import copy
 import restclient
 #import imp
 import types
-#import urllib
 import operator
 import json
+import datetime
 
 
 #restclient = imp.load_source('restclient', '/usr/lib/collectd/python/restclient.py')
@@ -150,6 +149,7 @@ def genCompositeStats(logger, stats) :
         ret.append(data)
 
         # Group active since
+        
         data = {
             'plugin': 'messagebus_localhost_logcollector',
             #'plugin': 'messagebus_localhost_shovel',
@@ -158,10 +158,10 @@ def genCompositeStats(logger, stats) :
             'values': [0]
         }
         data['meta'] = {}
-        data['meta']['name'] = "Shovel Active Destination Since"
-        data['meta']['description'] = "Time when the Shovel Active Destination host changed"
+        data['meta']['name'] = "Shovel Active Destination Updated"
+        data['meta']['description'] = "Time when the Shovel Active Destination host updated"
         data['meta']['category'] = 'MessageBus'
-        data['meta']['string_value'] = value['active_since']
+        data['meta']['string_value'] = datetime.datetime(value['active_since'][0],value['active_since'][1],value['active_since'][2],value['active_since'][3],value['active_since'][4],value['active_since'][5]).strftime("%Y-%b-%d %H:%M:%S")
         data['meta']['subitem'] = key
         ret.append(data)
 
